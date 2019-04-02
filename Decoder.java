@@ -9,17 +9,20 @@ import java.util.Scanner;
 
 public class Decoder {
 
-	public static RandomAccessFile raf; 
-	public static RandomAccessFile raf2;
-	public static RandomAccessFile raf3;
+	public static File raf; 
+	public static BufferedReader raf2;
+	public static BufferedWriter raf3;
+   public static ProcessBuilder pb;
+   public static Process p; 
 
 	public static char a, b;
 
 	public static void cleberTradutor() throws Exception {
 
-		raf = new RandomAccessFile("testeula.ula", "r");
-		raf2 = new RandomAccessFile("testeula.hex", "rw");
-		String str = raf.readLine();
+		raf = new File ("testeula.ula");
+		raf2 = new BufferedReader( new FileReader (raf));
+		raf3 = new BufferedWriter ( new FileWriter ("testeula.hex"));
+		String str = raf2.readLine();
 		System.out.println (str);
 
 		while (!str.equals("fim.")) {
@@ -32,78 +35,101 @@ public class Decoder {
 				} else if (str.charAt(0) == 'B' && str.charAt(1) == '=') {
 					b = str.charAt(2);
 				} else if (str.charAt(0) == 'A') {
-					raf2.writeBytes(a + "" + b + "5\n");
+					raf3.write (a + "" + b + "5\n");
+					raf3.flush();
 				} else
-					raf2.writeBytes(a + "" + b + "1\n");
+					raf3.write (a + "" + b + "1\n");
+					raf3.flush();
 				break;
 
 			case 3:
 				if (str.charAt(0) == 'A') {
-					raf2.writeBytes(a + "" + b + "2\n");
+					raf3.write(a + "" + b + "2\n");
+					raf3.flush();
 				} else
-					raf2.writeBytes(a + "" + b + "3\n");
+					raf3.write(a + "" + b + "3\n");
+					raf3.flush();
 				break;
 
 			case 5:
 				if (str.charAt(1) == 'o') {
-					raf2.writeBytes(a + "" + b + "4\n");
+					raf3.write(a + "" + b + "4\n");
+					raf3.flush();
 				} else if (str.charAt(1) == 'n') {
-					raf2.writeBytes(a + "" + b + "C\n");
+					raf3.write(a + "" + b + "C\n");
+					raf3.flush();
 				} else
-					raf2.writeBytes(a + "" + b + "D\n");
+					raf3.write(a + "" + b + "D\n");
+					raf3.flush();
 				break;
 				
 			case 6:
 				if (str.charAt(0) == 'z') {
-					raf2.writeBytes(a + "" + b + "0\n");
+					raf3.write(a + "" + b + "0\n");
+					raf3.flush();
 				} else if (str.charAt(1) == 'x') {
-					raf2.writeBytes(a + "" + b + "6\n");
+					raf3.write(a + "" + b + "6\n");
+					raf3.flush();
 				} else if (str.charAt(3) == 'r') {
-					raf2.writeBytes(a + "" + b + "8\n");
+					raf3.write(a + "" + b + "8\n");
+					raf3.flush();
 				} else if (str.charAt(3) == 'u' ) {
-					raf2.writeBytes(a + "" + b + "A\n");
+					raf3.write(a + "" + b + "A\n");
+					raf3.flush();
 				} else if (str.charAt(2) == 'u') {
-					raf2.writeBytes(a + "" + b + "B\n");
+					raf3.write(a + "" + b + "B\n");
+					raf3.flush();
 				} else 
-					raf2.writeBytes(a + "" + b + "F\n");
+					raf3.write(a + "" + b + "F\n");
+					raf3.flush();
 				break;
 				
 			case 7:
 				if (str.charAt(2) == 'a') {
-					raf2.writeBytes(a + "" + b + "7\n");
+					raf3.write(a + "" + b + "7\n");
+					raf3.flush();
 				} else if (str.charAt(2) == 'n') {
-					raf2.writeBytes(a + "" + b + "9\n");
+					raf3.write(a + "" + b + "9\n");
+					raf3.flush();
 				} else if (str.charAt(2) == '0')
-					raf2.writeBytes(a + "" + b + "E\n");
+					raf3.write(a + "" + b + "E\n");
+					raf3.flush();
 			}//fim switch
 			
-			str = raf.readLine();
+			str = raf2.readLine();
 			System.out.println (str);
 
 		}//fim while
-		raf.close();
+		raf3.close();
 		raf2.close();
 	}//fim cleberTradutor
 	
 	public static void cleberX9 () throws Exception {
 		
-		raf3 = new RandomAccessFile("testeula.hex", "r");
+		raf = new File ("testeula.hex");
+		raf2 = new BufferedReader( new FileReader (raf));
 		String command;
 		Scanner scan = new Scanner(System.in);
 		scan.nextLine ();
 		
-		command = raf3.readLine();
+		command = raf2.readLine();
 		
 		while (command != null) {
 			
-			System.out.println(command);
-			scan.nextLine ();
-			command = raf3.readLine();
+			
+			System.in.read ();
+         System.in.read ();
+         pb = new ProcessBuilder ("envia.exe", "COM5", command);
+         System.out.println(command);
+			p = pb.start ();
+         p.waitFor ();
+         
+			command = raf2.readLine();
 			
 		}//fim while
 		
 		scan.close();
-		raf3.close();
+		raf2.close();
 	}//fim cleberX9
 	
 	public static void main(String[] args) {
