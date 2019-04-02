@@ -116,14 +116,12 @@ public class Decoder {
 		
 		while (command != null) {
 			
-			
 			System.in.read ();
-         System.in.read ();
-         pb = new ProcessBuilder ("envia.exe", "COM5", command);
-         System.out.println(command);
+         		System.in.read ();
+      			pb = new ProcessBuilder ("envia.exe", "COM5", command);
+       			System.out.println(command);
 			p = pb.start ();
-         p.waitFor ();
-         
+         		p.waitFor ();
 			command = raf2.readLine();
 			
 		}//fim while
